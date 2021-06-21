@@ -26,7 +26,5 @@ namespace CarDataService.Models
         public String Manufacturers_Release_Date { get; set; }
 
 
-
-
     }
 }

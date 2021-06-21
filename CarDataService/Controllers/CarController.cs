@@ -13,10 +13,12 @@ namespace CarDataService.Controllers
     [Route("[controller]")]
     public class CarController : ControllerBase
     {
+        private readonly RabbitMQHandler _mqHandler;
         CarDataCollector dataCollector = new CarDataCollector();
 
-        public CarController()
+        public CarController(RabbitMQHandler mQHandler)
         {
+            _mqHandler = mQHandler;
             MQListener();
         }
 
@@ -36,9 +38,7 @@ namespace CarDataService.Controllers
 
         private void MQListener()
         {
-            RabbitMQHandler mQHandler = new RabbitMQHandler("user");
-
-            mQHandler.QueueListener();
+            _mqHandler.QueueListener();
         }
     }
 }

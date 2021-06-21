@@ -1,4 +1,6 @@
 ﻿using CarDataService.Collectors;
+using CarDataService.Models;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -15,14 +17,14 @@ namespace CarDataService.MessageQueue
         IConnectionFactory factory;
         IConnection connection;
         IModel channel;
-        string _queueName;
+        RabbitMQConfig config;
 
         CarDataCollector carDataCollector = new CarDataCollector();
 
 
-        public RabbitMQHandler(string queueName)
+        public RabbitMQHandler(IOptions<RabbitMQConfig> options)
         {
-            _queueName = queueName;
+            config = options.Value;
             SetupMQ();
         }
 
@@ -31,13 +33,13 @@ namespace CarDataService.MessageQueue
             factory = new ConnectionFactory
             {
                 // Username and password are hardcoded
-                Uri = new Uri("amqp://guest:freaks@localhost:5672")
+                Uri = new Uri(config.URI)
             };
 
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
 
-            channel.QueueDeclare(_queueName,
+            channel.QueueDeclare(config.QueueName,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -48,7 +50,7 @@ namespace CarDataService.MessageQueue
         {
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-            channel.BasicPublish("", _queueName, null, body);
+            channel.BasicPublish("", config.QueueName, null, body);
         }
 
         public void QueueListener()
@@ -64,7 +66,7 @@ namespace CarDataService.MessageQueue
                 await carDataCollector.GetCarDataOnModel(message.Substring(0), message.Substring(0), message.Substring(0));
             };
 
-            channel.BasicConsume(_queueName, true, consumer);
+            channel.BasicConsume(config.QueueName, true, consumer);
         }
     }
 }

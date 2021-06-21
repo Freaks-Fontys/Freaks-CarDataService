@@ -52,7 +52,7 @@ namespace CarDataService.Collectors
             HttpRequestMessage request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://apis.solarialabs.com/shine/v1/vehicle-stats/specs?make={brand}&model={model}&year={year}&apikey={"6piGP6vIejIM9jkUQmxjt3GCOaODG0gL"}")
+                RequestUri = new Uri($"https://apis.solarialabs.com/shine/v1/vehicle-stats/specs?make={brand}&model={model}&year={year}&full-data=true&apikey={"6piGP6vIejIM9jkUQmxjt3GCOaODG0gL"}")
             };
 
             HttpResponseMessage response = await client.SendAsync(request);
@@ -60,6 +60,11 @@ namespace CarDataService.Collectors
             response.EnsureSuccessStatusCode();
 
             var body = await response.Content.ReadAsStringAsync();
+
+            if(body != "")
+            {
+
+            }
 
             car = new Car(
                 body.Substring(0, 10),
