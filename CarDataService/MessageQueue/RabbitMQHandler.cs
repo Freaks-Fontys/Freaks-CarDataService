@@ -32,7 +32,6 @@ namespace CarDataService.MessageQueue
         {
             factory = new ConnectionFactory
             {
-                // Username and password are hardcoded
                 Uri = new Uri(config.URI)
             };
 
