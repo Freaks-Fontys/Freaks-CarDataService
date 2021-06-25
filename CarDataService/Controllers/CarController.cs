@@ -2,6 +2,7 @@
 using CarDataService.MessageQueue;
 using CarDataService.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace CarDataService.Controllers
     {
         private readonly RabbitMQHandler _mqHandler;
         CarDataCollector dataCollector = new CarDataCollector();
+        private readonly ILogger _logger;
 
-        public CarController(RabbitMQHandler mQHandler)
+        public CarController(RabbitMQHandler mQHandler, ILogger<CarController> logger)
         {
             _mqHandler = mQHandler;
+            _logger = logger;
             MQListener();
         }
 

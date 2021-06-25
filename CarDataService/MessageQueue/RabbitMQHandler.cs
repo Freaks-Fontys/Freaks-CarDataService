@@ -62,7 +62,7 @@ namespace CarDataService.MessageQueue
 
                 // Do something with the message
                 // await carDataCollector.GetCarDataOnVin(message);
-                await carDataCollector.GetCarDataOnModel(message.Substring(0), message.Substring(0), message.Substring(0));
+                await carDataCollector.GetCarDataOnModel("BMW" , "M4", "2018");
             };
 
             channel.BasicConsume(config.QueueName, true, consumer);

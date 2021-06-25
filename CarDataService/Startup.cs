@@ -29,6 +29,7 @@ namespace CarDataService
         {
             services.Configure<RabbitMQConfig>(Configuration.GetSection("RabbitMQ"));
             services.AddScoped<RabbitMQHandler>();
+            services.AddLogging();
             services.AddControllers();
         }
 

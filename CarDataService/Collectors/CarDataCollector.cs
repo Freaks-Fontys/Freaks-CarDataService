@@ -45,14 +45,14 @@ namespace CarDataService.Collectors
             return car;
         }
 
-        public async Task<Car> GetCarDataOnModel(string brand, string model, string year)
+        public async Task<Car> GetCarDataOnModel(string manufacturer, string model, string year)
         {
-            Car car;
+            Car car = new Car(manufacturer, model, year);
 
             HttpRequestMessage request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://apis.solarialabs.com/shine/v1/vehicle-stats/specs?make={brand}&model={model}&year={year}&full-data=true&apikey={"6piGP6vIejIM9jkUQmxjt3GCOaODG0gL"}")
+                RequestUri = new Uri($"https://apis.solarialabs.com/shine/v1/vehicle-stats/specs?make={manufacturer}&model={model}&year={year}&full-data=true&apikey={"6piGP6vIejIM9jkUQmxjt3GCOaODG0gL"}")
             };
 
             HttpResponseMessage response = await client.SendAsync(request);
@@ -60,17 +60,16 @@ namespace CarDataService.Collectors
             response.EnsureSuccessStatusCode();
 
             var body = await response.Content.ReadAsStringAsync();
-
             if(body != "")
             {
 
             }
 
-            car = new Car(
-                body.Substring(0, 10),
-                body.Substring(0, 10),
-                body.Substring(0, 10)
-            );
+            // change dummydata with data from api
+            car.Greenhouse_Gas_Rating_Index = 7;
+            car.Fuel_Efficiency_Rating_Index = 8;
+            car.Engine_Cylinders = 6;
+            car.Manufacturers_Release_Date = "08-08-2018";
 
             return car;
         }
